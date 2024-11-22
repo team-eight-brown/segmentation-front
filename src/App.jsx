@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 import './App.css'
 import LoginForm from "./components/login/LoginForm.tsx";
-import SegmentForm from "./components/segments/SegmentForm.tsx";
+import SegmentPage from "./components/segments/SegmentPage.tsx";
 
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
         <Router>
             <Routes>
                 <Route path="/login" element={<LoginForm/>} />
-                <Route path="/" element={<SegmentForm/>}/>
+                <Route path="/" element={<SegmentPage/>}/>
             </Routes>
         </Router>
     )
