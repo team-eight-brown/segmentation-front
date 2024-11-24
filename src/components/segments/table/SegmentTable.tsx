@@ -5,37 +5,22 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import Paper from '@mui/material/Paper';
 
-import {useMemo, useRef, useState} from "react"
+import {useEffect, useMemo, useRef, useState} from "react"
 import SegmentTableToolBar from "./SegmentTableToolBar";
 import SegmentTableHead from "./SegmentTableHead";
 import SegmentTableBody from "./SegmentTableBody";
 
-export interface Data {
-    id: number;
-    name: string;
-}
-
-function createData(id: number, name: string): Data {
-    return {id, name};
-}
-
-function generateRowsData(c: number): Data[] {
-    let ans: Data[] = []
-    for (let j = 0; j < c; j++) {
-        ans.push(createData(j * 200000, "NAME_SEGM" + j))
-    }
-    return ans
-}
-
-export default function SegmentTable() {
+export default function SegmentTable({rows, setRows}) {
     const [selected, setSelected] = useState<number[]>([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const rows = useRef(generateRowsData(123))
+    const [visible, setVisible] = useState([])
+
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelected = rows.current.map((n) => n.id);
+            const newSelected = rows.map((n) => n.id);
             setSelected(newSelected);
             return;
         }
@@ -70,15 +55,34 @@ export default function SegmentTable() {
         setPage(0);
     };
 
+    const handleChangeById = (id, newValue) => {
+        let nextRows = rows.map((row) => {
+            if (row.id === id){
+                return {
+                    ...row,
+                    name: newValue
+                }
+            } else {
+                return row
+            }
+        })
+        setRows(nextRows)
+    }
 
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.current.length) : 0;
-
-    const visibleRows = useMemo(
+    /*const visibleRows = useMemo(
         () =>
-            [...rows.current]
+            [...rows]
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-        [page, rowsPerPage],
-    );
+        [page, rowsPerPage, rows],
+    );*/
+
+    useEffect(() => {
+        setVisible([...rows].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage))
+    }, [])
+
+    useEffect(() => {
+        setVisible([...rows].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage))
+    }, [page, rowsPerPage, rows])
 
     return (
         <Box sx={{width: '100%'}}>
@@ -93,25 +97,28 @@ export default function SegmentTable() {
                         <SegmentTableHead
                             numSelected={selected.length}
                             onSelectAllClick={handleSelectAllClick}
-                            rowCount={rows.current.length}
+                            rowCount={rows.length}
                         />
 
                         <SegmentTableBody
-                            visibleRows={visibleRows}
+                            visibleRows={visible}
                             selected={selected}
                             handleClick={handleClick}
                             emptyRows={emptyRows}
+                            handleChangeById={handleChangeById}
                         />
                     </Table>
                 </TableContainer>
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 15]}
                     component="div"
-                    count={rows.current.length}
+                    count={rows.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
+                    showFirstButton
+                    showLastButton
                 />
             </Paper>
 

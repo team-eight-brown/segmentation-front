@@ -3,13 +3,12 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Checkbox from "@mui/material/Checkbox";
-import {Data} from "./SegmentTable";
 
 type alignCell = 'inherit' | 'left' | 'center' | 'right' | 'justify';
 
 interface HeadCell {
     disablePadding: boolean;
-    id: keyof Data;
+    id: string | number;
     label: string;
     align: alignCell;
 }

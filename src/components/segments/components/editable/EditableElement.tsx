@@ -1,38 +1,46 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import './EditableField.css';
 
-const EditableElement = () => {
-    const [value, setValue] = useState('');
+const EditableElement = ({value, id, handleChangeById}) => {
     const [editMode, setEditMode] = useState(false);
+    const [localValue, setLocalValue] = useState(value)
 
     const handleChange = (e) => {
-        setValue(e.target.value);
-    };
+        setLocalValue(e.target.value)
+    }
+    const handleEnd = (e) => {
+        setEditMode(false);
+        handleChangeById(id, e.target.value.trim())
+    }
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' || e.key === 'Escape') {
-            setEditMode(false);
+            handleEnd(e)
         }
     };
 
-    const handleDoubleClick = () => {
+    const handleDoubleClick = (e) => {
         setEditMode(true);
     };
 
-    const handleBlur = () => {
-        setEditMode(false);
+    const handleBlur = (e) => {
+        handleEnd(e)
     };
+
+    useEffect( () => {
+        setLocalValue(value)
+    }, [value])
 
     return (
         <div>
             {editMode ? (
                 <input
                     type="text"
-                    value={value}
-                    onChange={handleChange}
+                    value={localValue}
                     className="editable-input"
                     onKeyDown={handleKeyDown}
                     onBlur={handleBlur}
+                    onChange={handleChange}
                     autoFocus
                     maxLength={60}
                 />
