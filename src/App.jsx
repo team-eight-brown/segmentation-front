@@ -21,7 +21,6 @@ function App() {
                 stacked
                 position="top-left"
                 autoClose={2000}
-                hideProgressBar
                 newestOnTop={false}
                 closeOnClick
                 rtl={false}

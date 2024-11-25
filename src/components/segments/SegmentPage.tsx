@@ -3,7 +3,9 @@ import theme from "../../theme/Theme";
 import SegmentTable from "./table/SegmentTable";
 import SegmentAdd from "./components/SegmentAdd";
 import {useEffect, useRef, useState} from "react";
-import {notifyError} from "../../toast/Notifies";
+import {notifyError, notifyLoading, updateSuccess} from "../../toast/Notifies";
+import {addNewSegment, START_LENGTH} from "../../api/SegmentApi";
+import {toast} from "react-toastify";
 
 export interface Data {
     id: number;
@@ -14,31 +16,35 @@ export function createData(id: number, name: string): Data {
     return {id, name};
 }
 
-export function generateRowsData(c: number): Data[] {
-    let ans: Data[] = []
-    for (let j = 0; j < c; j++) {
-        ans.push(createData(j * 200000, `NAME_SEGMENT${j}`))
-    }
-    return ans
-}
-
 const SegmentPage = () => {
     const [segmentAddValue, setSegmentAddValue] = useState("");
     const [isProcessAdd, setIsProcessAdd] = useState(false)
-
-    const [allRows, setAllRows] = useState(generateRowsData(123))
+    const [rowsAmount, setRowsAmount] = useState(0)
 
     const handleSegmentAddValue = (e) => {
-        setSegmentAddValue(e.target.value)
+        setSegmentAddValue(e.target.value.trim())
     }
 
+    useEffect(() => {
+        setRowsAmount(START_LENGTH)
+    }, []);
+
     const handleAddSegment = () => {
-        if (segmentAddValue.trim() === ""){
+        if (segmentAddValue === ""){
             notifyError("Пустое поле")
             return
-        } else {
-            console.log(allRows)
         }
+
+        setIsProcessAdd(true);
+
+        const id = notifyLoading("Добавление элемента");
+
+        addNewSegment(segmentAddValue).then((e : number)=>{
+            updateSuccess(id, "Элемент добавлен")
+            setRowsAmount(amount=> amount + e)
+        }).finally(()=>{
+            setIsProcessAdd(false);
+        })
     }
 
     return (
@@ -49,14 +55,18 @@ const SegmentPage = () => {
                         handleSegmentAddValue={handleSegmentAddValue}
                         segmentAddValue={segmentAddValue}
                         handleAddSegment={handleAddSegment}
-                        isProcessAdd={isProcessAdd}/>
-
+                        isProcessAdd={isProcessAdd}
+                    />
                     <SegmentTable
-                        rows={allRows}
-                        setRows={setAllRows}
+                        rowsAmount={rowsAmount}
+                        setRowsAmount={setRowsAmount}
                     />
                 </Container>
             </ThemeProvider>
+            <div> Вопрос про контролл флоу: <br/>
+                Есть toast, который всплывает по факту окончания вызова API1, то есть до вызова получения данных с сервера или после их получения? <br/>
+                2 примера, add и change elem
+            </div>
         </>
     );
 };

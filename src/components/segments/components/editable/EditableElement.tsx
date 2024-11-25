@@ -6,11 +6,15 @@ const EditableElement = ({value, id, handleChangeById}) => {
     const [localValue, setLocalValue] = useState(value)
 
     const handleChange = (e) => {
-        setLocalValue(e.target.value)
+        setLocalValue(e.target.value.trim())
     }
     const handleEnd = (e) => {
         setEditMode(false);
-        handleChangeById(id, e.target.value.trim())
+        let val = e.target.value
+        if (val !== value){
+            handleChangeById(id, val)
+
+        }
     }
 
     const handleKeyDown = (e) => {
