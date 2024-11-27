@@ -3,6 +3,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Checkbox from "@mui/material/Checkbox";
+import FilterByRow from "../components/FilterByRow";
 
 type alignCell = 'inherit' | 'left' | 'center' | 'right' | 'justify';
 
@@ -28,7 +29,7 @@ const headCells: HeadCell[] = [
     },
 ];
 
-const SegmentTableHead = ({onSelectAllClick, numSelected, rowCount} ) => {
+const SegmentTableHead = ({onSelectAllClick, numSelected, rowCount, handleFilter}) => {
     return (
         <TableHead>
             <TableRow>
@@ -41,6 +42,7 @@ const SegmentTableHead = ({onSelectAllClick, numSelected, rowCount} ) => {
                         inputProps={{
                             'aria-label': 'select all desserts',
                         }}
+                        style={{width: '45px'}}
                     />
                 </TableCell>
                 {headCells.map((headCell) => (
@@ -48,10 +50,13 @@ const SegmentTableHead = ({onSelectAllClick, numSelected, rowCount} ) => {
                         key={headCell.id}
                         align={headCell.align}
                         padding={headCell.disablePadding ? 'checkbox' : 'normal'}
+                        style={{width: '400px'}}
+
                     >
-                        <span>
-                            {headCell.label}
-                        </span>
+                        <FilterByRow
+                            handleChangeFilter={handleFilter}
+                            label={headCell.label}
+                        />
 
                     </TableCell>
                 ))}

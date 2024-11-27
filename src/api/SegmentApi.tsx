@@ -1,11 +1,23 @@
 import axios from "axios";
-import {createData, Data} from "../components/segments/SegmentPage";
-import {useState} from "react";
 import {Id} from "react-toastify/dist/types";
 
 const BASE_URL = 'https://url.com';
 
-export const START_LENGTH = 1
+export interface Data {
+    id: number;
+    name: string;
+}
+
+export function createData(id: number, name: string): Data {
+    return {id, name};
+}
+
+export const START_LENGTH = 123
+
+export interface filters {
+    nameFilter? : string,
+    idFilter? : string
+}
 
 let ROWS = generateRowsData(START_LENGTH)
 
@@ -23,18 +35,26 @@ export const testSegment = async () => {
 
 export const addNewSegment = (text: string) => {
     return new Promise((resolve, reject) => {
+        let newId = ROWS.length == 0 ? 0 : ROWS[ROWS.length - 1].id + 1
         setTimeout(() => {
-            ROWS.push(createData(ROWS[ROWS.length - 1].id + 1, text))
+            ROWS.push(createData(newId, text))
             resolve(1);
         }, 1000);
     })
 
 }
 
-export const getSegmentsOnPage = (rowsPerPage, page) => {
+export const getSegmentsOnPage = (rowsPerPage, page, filter : filters) => {
+    //console.log("idFilter: " + filter.idFilter)
+    //console.log("name: " + filter.nameFilter)
+    //console.log("filtered by id: " + [...ROWS].filter(elem => elem.id.toString().startsWith(filter.idFilter)).length)
+
     return new Promise((resolve, reject) => {
+
         setTimeout(() => {
-            resolve([...ROWS].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage));
+            resolve([...ROWS].filter(elem => elem.id.toString().startsWith(filter.idFilter))
+                .filter(elem=> elem.name.startsWith(filter.nameFilter)).
+                slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage));
         }, 1000);
     })
 
