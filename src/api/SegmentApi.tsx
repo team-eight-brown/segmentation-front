@@ -17,7 +17,7 @@ export function createData(id: number, name: string): Data {
     return {id, name};
 }
 
-export const START_LENGTH = 5
+export const START_LENGTH = 110
 
 export interface filters {
     nameFilter? : string,

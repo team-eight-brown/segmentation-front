@@ -20,12 +20,13 @@ import {
 import {notifyError, notifyLoading, updateError, updateSuccess} from "../../../toast/Notifies";
 import {Id} from "react-toastify/dist/types";
 import SegmentAdd from "../components/SegmentAdd";
-import DisterbuteComponent from "../components/DisterbuteComponent";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import {Simulate} from "react-dom/test-utils";
 import select = Simulate.select;
+import copy = Simulate.copy;
+import DistributeSegment from "../components/DistributeSegment";
 
 const createEmptyNumberSet = (): Set<Id> => {
     return new Set<Id>();
@@ -47,7 +48,15 @@ export default function SegmentTable() {
     const [isProcessAdd, setIsProcessAdd] = useState(false)
     const [rowsAmount, setRowsAmount] = useState(0)
     const [filterElements, setFilterElements] = useState<filters>({nameFilter: "", idFilter: ""})
+    const [prevFilterElements, setPrevFilterElements] = useState<filters>({nameFilter: "", idFilter: ""})
     const [rerender, setRerender] = useState(false);
+    const [isFilterSet, setIsFilterSet] = useState(false);
+    const [pageChanged, setPageChanged] = useState(false);
+
+    const checkFilterSet = () : boolean => {
+        return filterElements.idFilter != "" || filterElements.nameFilter != "";
+    }
+
 
     const toggleRerender = () => {
         setRerender((prev) => !prev)
@@ -56,14 +65,6 @@ export default function SegmentTable() {
     const handleSegmentAddValue = (e) => {
         setSegmentAddValue(e.target.value.trim())
     }
-
-    /*    const clearSelections = () => {
-            setSelectedAll(false)
-            setSelected(createEmptyNumberSet())
-            setPageChanged(false)
-        }
-
-        */
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -79,6 +80,15 @@ export default function SegmentTable() {
         setSelected(createEmptyNumberSet())
     }
 
+    const addToSelected = (toAdd) => {
+        setSelected(prev => {
+            toAdd.forEach(e => {
+                prev.add(e)
+            })
+            return createNumberSet(prev);
+        })
+    }
+
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => { //todo FIX
         const pageSelections = visible.map((n) => n.id);
 
@@ -92,6 +102,12 @@ export default function SegmentTable() {
             }
         })
 
+/*        if (isFilterSet){
+
+            addToSelected(toAdd);
+            return;
+        }*/
+
         if (selectedAll || rowsAmount == selected.size){
             if (selected.size == 0){
                 setSelectedAll(false)
@@ -103,43 +119,9 @@ export default function SegmentTable() {
                 return
             }
 
-            setSelected(prev => {
-                toAdd.forEach(e => {
-                    prev.add(e)
-                })
-                return createNumberSet(prev);
-            })
+            addToSelected(toAdd);
+
         }
-
-        /*const newSelected = visible.map((n) => n.id);
-
-        if (selectedAll) {
-            if (selected.length == 0){
-                setSelectedAll(false)
-            }
-            setSelected([])
-        } else {
-            if (selected.length != 0 && selected.length % rowsPerPage == 0 || selected.length == rowsAmount){
-                if (pageChanged){
-                    setSelected(sels => sels.concat(newSelected))
-                    setPageChanged(false)
-                } else {
-                    setSelAll()
-                }
-                return
-            }
-            if (selected.length > rowsPerPage){
-                setSelected(sels => sels.concat(newSelected))
-            } else {
-                if (newSelected.length == rowsAmount) {
-                    setSelAll()
-                } else {
-                    setSelected(newSelected)
-                }
-
-            }
-
-        }*/
 
     };
 
@@ -160,20 +142,48 @@ export default function SegmentTable() {
     };
 
     const handleFilter = (value: string, label: string) => { //todo fix with filters pagination! + fix chekced all
+        let trimValue = value.trim();
+
         if (label == "ID") {
-            setFilterElements(elem => {
-                return {
-                    ...elem,
-                    idFilter: value
-                }
-            })
+            if (prevFilterElements.idFilter != trimValue) {
+
+                setFilterElements(elem => {
+                    return {
+                        ...elem,
+                        idFilter: trimValue
+                    }
+                })
+
+                setPrevFilterElements(elem => {
+                    return {
+                        ...elem,
+                        idFilter: trimValue
+                    }
+                })
+
+            } else {
+                return
+            }
+
         } else if (label == "NAME") {
-            setFilterElements(elem => {
-                return {
-                    ...elem,
-                    nameFilter: value
-                }
-            })
+            if (prevFilterElements.nameFilter != trimValue){
+                setPrevFilterElements(elem => {
+                    return {
+                        ...elem,
+                        nameFilter: trimValue
+                    }
+                })
+
+                setFilterElements(elem => {
+                    return {
+                        ...elem,
+                        nameFilter: trimValue
+                    }
+                })
+            } else {
+                return;
+            }
+
         }
 
         toggleRerender()
@@ -196,7 +206,7 @@ export default function SegmentTable() {
         setIsLoading(true)
         let tmpId = notifyLoading("Элементы удаляются")
 
-        deleteSegments(selectedAll, selected).then(({deleted, rows}) => {
+        deleteSegments(selectedAll, selected).then(() => {
             updateSuccess(tmpId, "Выбранные элементы удалены")
 
             setSelected(createEmptyNumberSet());
@@ -234,6 +244,15 @@ export default function SegmentTable() {
     }
 
     useEffect(() => {
+        setIsFilterSet(checkFilterSet())
+    }, [filterElements]);
+
+    useEffect(() => {
+        if (pageChanged){
+            setPageChanged(false)
+            return
+        }
+
         setIsLoading(true)
 
         getSegmentsOnPageWithFilter(rowsPerPage, page, filterElements).then((r: ReturnData) => {
@@ -244,7 +263,14 @@ export default function SegmentTable() {
                 let diff = ~~(r.rows / rowsPerPage);
                 setPage(r.rows % rowsPerPage == 0 ? Math.max(0, diff - 1) : diff)
             } else {
+
                 setIsLoading(false)
+
+                if (r.rows == 0 && page != 0) {
+                    setPage(0)
+                    setPageChanged(true);
+                    setIsLoading(false)
+                }
             }
 
             setEmptyRows(Math.max(0, (1 + page) * rowsPerPage - r.rows))
@@ -266,7 +292,7 @@ export default function SegmentTable() {
                 isProcessAdd={isProcessAdd}
 
             />
-            <DisterbuteComponent
+            <DistributeSegment
             />
             <Box sx={{width: '100%'}}>
                 <Paper sx={{width: '100%', mb: 2}}>
