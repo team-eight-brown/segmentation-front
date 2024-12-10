@@ -1,7 +1,7 @@
 import axios from "axios";
 import {Id} from "react-toastify/dist/types";
 
-const BASE_URL = 'https://url.com';
+const BASE_URL = 'http://89.169.167.3:8090/api/v1/';
 
 export interface Data {
     id: number;
@@ -114,3 +114,18 @@ export const deleteSegments = (allSelected: boolean, ids: Set<Id>) => {
     })
 }
 
+export const authUser = async (data: any) => {
+    return axios.post(BASE_URL + "auth/login", data)
+}
+
+export const registerUser = async (data: any) => {
+    return axios.post(BASE_URL + "auth/register", data)
+}
+
+export const testApi = async (data: any) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(true)
+        }, 1000);
+    })
+}
