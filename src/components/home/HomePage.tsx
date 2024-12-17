@@ -12,6 +12,10 @@ const HomePage = () => {
         navigate("/register")
     }
 
+    const handleClickDashboard = () => {
+        navigate("/dashboard")
+    }
+
     return (
         <>
             <Container component="main" maxWidth="xs">
@@ -32,6 +36,7 @@ const HomePage = () => {
                 <Stack spacing={4} direction="column" maxWidth={300}>
                     <Button variant="outlined" onClick={handleClickLogin}>Логин</Button>
                     <Button variant="outlined" onClick={handleClickRegister}>Регистрация</Button>
+                    <Button variant="outlined" onClick={handleClickDashboard}>Дэшборд</Button>
                 </Stack>
             </Box>
             </Container>

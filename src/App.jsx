@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 import './App.css'
 import LoginPage from "./components/login/LoginPage.tsx";
@@ -22,10 +22,9 @@ function App() {
                 <AuthProvider>
                     <Router>
                         <Routes>
-                            <Route path="/" element={<HomePage />} />
+                            <Route path="*" element={<HomePage />} />
                             <Route path="/login" element={<LoginPage />} />
                             <Route path="/register" element={<RegisterPage />} />
-
                             <Route
                                 path="/segments"
                                 element={
@@ -50,6 +49,7 @@ function App() {
                                     </ProtectedRoute>
                                 }
                             />
+
                         </Routes>
                     </Router>
                 </AuthProvider>
