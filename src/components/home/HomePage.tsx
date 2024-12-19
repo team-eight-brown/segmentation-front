@@ -1,5 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import {Box, Button, Container, Stack, Typography} from "@mui/material";
+import {getSegmentsOnPage} from "../../api/SegmentApi";
+import {useEffect} from "react";
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -15,6 +17,12 @@ const HomePage = () => {
     const handleClickDashboard = () => {
         navigate("/dashboard")
     }
+
+    useEffect(()=>{
+        getSegmentsOnPage(5, 1).then((e) => {
+            console.log(e.data)
+        })
+    })
 
     return (
         <>

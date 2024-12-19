@@ -1,16 +1,17 @@
 import BackButton from "../dashboard/BackButton";
 import LogoutButton from "../auth/LogoutButton";
+import {Container} from "@mui/material";
+import UsersTable from "./table/UsersTable";
 
 const UserPage = () => {
-    const handleSubmit = () => {
-
-    };
 
     return (
         <>
-            <BackButton/>
-            <h3>UserTables...</h3>
-            <LogoutButton/>
+            <Container component="main">
+                <BackButton/>
+                <UsersTable/>
+                <LogoutButton/>
+            </Container>
         </>
     );
 };

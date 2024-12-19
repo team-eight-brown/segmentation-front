@@ -109,7 +109,7 @@ const RegisterPage = () => {
                             color="primary"
                             sx={{mt: 3, mb: 2}}
                         >
-                            Зарегестрироваться
+                            Зарегистрироваться
                         </Button>
                     </Box>
                 </Box>

@@ -1,5 +1,4 @@
-import {Container, ThemeProvider} from "@mui/material";
-import theme from "../../theme/Theme";
+import {Container} from "@mui/material";
 import SegmentTable from "./table/SegmentTable";
 import BackButton from "../dashboard/BackButton";
 import LogoutButton from "../auth/LogoutButton";
