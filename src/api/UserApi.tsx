@@ -22,5 +22,5 @@ export const getSegmentsOnUserPage = (userId, rowsPerPage, page) => {
 }
 
 export const deleteSegment = (userId, segmentId) => {
-    return instance.delete("segments/" + segmentId + "/users?userId=" + userId)
+    return instance.delete("segments/" + segmentId + "/users?userId=" + userId, {data: {userId}})
 }

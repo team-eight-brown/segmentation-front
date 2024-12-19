@@ -84,38 +84,46 @@ export default function UsersTable() {
 
         setIsLoading(false)
 
-        getSegmentsOnPage(rowsPerPage, page).then((returned) => {
+        if (userData != -1 && userInput) {
+            getSegmentsOnUserPage(userData, rowsPerPage, page).then((returned) => {
 
-            let values = returned.data.content;
-            let totalRows = returned.data.totalElements
+                let values = returned.data.content;
+                let totalRows = returned.data.totalElements
 
-            setVisible(values)
-            setRowsAmount(totalRows)
+                setVisible(values)
+                setRowsAmount(totalRows)
 
-            if (page * rowsPerPage >= totalRows && totalRows != 0) {
-                let diff = ~~(totalRows / rowsPerPage);
-                setPage(totalRows % rowsPerPage == 0 ? Math.max(0, diff - 1) : diff)
-            } else {
+                if (page * rowsPerPage >= totalRows && totalRows != 0) {
+                    let diff = ~~(totalRows / rowsPerPage);
+                    setPage(totalRows % rowsPerPage == 0 ? Math.max(0, diff - 1) : diff)
+                } else {
 
-                setIsLoading(false)
-
-                if (totalRows == 0 && page != 0) {
-                    setPage(0)
-                    setPageChanged(true);
                     setIsLoading(false)
+
+                    if (totalRows == 0 && page != 0) {
+                        setPage(0)
+                        setPageChanged(true);
+                        setIsLoading(false)
+                    }
                 }
-            }
 
-            setEmptyRows(Math.max(0, (1 + page) * rowsPerPage - totalRows))
+                setEmptyRows(Math.max(0, (1 + page) * rowsPerPage - totalRows))
 
-        }).catch(e => {
-            handleUnchoose()
-            notifyError("Такой юзер не найден")
-        }).finally(() => {
+            }).catch(e => {
+                console.log(e)
+                if (e.response.status === 404){
+                    handleUnchoose()
+                    notifyError("Такой юзер не найден")
+                } else {
+                    logout()
+                }
 
-        })
+            }).finally(() => {
 
-    }, [page, rowsPerPage, rerender])
+            })
+        }
+
+    }, [page, rowsPerPage, rerender, userData])
 
     const userSetter = (value) => {
         setUserData(value)
