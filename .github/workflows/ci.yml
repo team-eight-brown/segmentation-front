@@ -66,10 +66,10 @@ jobs:
         run: sudo docker system prune -a -f
       - name: Remove existing Docker image
         run: |
-          docker rmi -f l1zail/segmentation-front:latest || true
+          sudo docker rmi -f l1zail/segmentation-front:latest || true
       - name: Pull latest Docker image
         run: |
-          docker pull l1zail/segmentation-front:latest
+          sudo docker pull l1zail/segmentation-front:latest
 
   deploy:
     runs-on: self-hosted
