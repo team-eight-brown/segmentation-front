@@ -1,7 +1,10 @@
 name: Deploy React Vite App
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - '**'
+    workflow_dispatch:
 
 jobs:
   build:
@@ -22,6 +25,7 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
     needs: build
     steps:
       - uses: actions/checkout@v4
