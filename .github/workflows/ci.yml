@@ -25,7 +25,6 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
     needs: build
     steps:
       - uses: actions/checkout@v4
