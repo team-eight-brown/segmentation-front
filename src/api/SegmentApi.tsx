@@ -1,7 +1,6 @@
 import axios from "axios";
 import {Id} from "react-toastify/dist/types";
-
-const BASE_URL = 'http://89.169.167.3:8090/api/v1/';
+const BASE_URL = 'http://84.201.152.148:8090/api/v1/';
 
 export const instance = axios.create({
     baseURL: BASE_URL
