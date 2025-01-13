@@ -3,5 +3,5 @@ WORKDIR /react-vite-app
 EXPOSE 5173
 COPY package.json package-lock.json ./
 RUN npm install --silent
-COPY ../../../../AppData/Local/Temp/Rar$DRa4168.33329/segmentation-front-add-ci-cd ./
+COPY . ./
 CMD ["npm", "run", "dev", "--", "--host"]
