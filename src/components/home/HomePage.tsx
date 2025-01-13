@@ -1,10 +1,11 @@
 import {useNavigate} from "react-router-dom";
 import {Box, Button, Container, Stack, Typography} from "@mui/material";
-import {getSegmentsOnPage} from "../../api/SegmentApi";
 import {useEffect} from "react";
+import {useAuth} from "../auth/AuthProvider";
 
 const HomePage = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     const handleClickLogin = () => {
         navigate("/login")
@@ -14,15 +15,11 @@ const HomePage = () => {
         navigate("/register")
     }
 
-    const handleClickDashboard = () => {
-        navigate("/dashboard")
-    }
-
-    useEffect(()=>{
-        getSegmentsOnPage(5, 1).then((e) => {
-            console.log(e.data)
-        })
-    })
+    useEffect(() => {
+        if (user && window.location.pathname == "/"){
+            navigate("/dashboard")
+        }
+    }, []);
 
     return (
         <>
@@ -44,7 +41,6 @@ const HomePage = () => {
                 <Stack spacing={4} direction="column" maxWidth={300}>
                     <Button variant="outlined" onClick={handleClickLogin}>Логин</Button>
                     <Button variant="outlined" onClick={handleClickRegister}>Регистрация</Button>
-                    <Button variant="outlined" onClick={handleClickDashboard}>Дэшборд</Button>
                 </Stack>
             </Box>
             </Container>

@@ -275,9 +275,6 @@ export default function SegmentTable() {
     }, [filterElements]);
 
     function handleSubmitRegexSegments(data){
-        console.log(data)
-
-
         distribute(data).then((response)=>{
             notifySuccess(response.data.value)
         }).catch((error)=>{
