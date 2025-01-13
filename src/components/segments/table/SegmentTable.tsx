@@ -19,9 +19,6 @@ import {
 import {notifyError, notifyLoading, notifySuccess, updateError, updateSuccess} from "../../../toast/Notifies";
 import {Id} from "react-toastify/dist/types";
 import SegmentAdd from "../components/SegmentAdd";
-import TableBody from "@mui/material/TableBody";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
 import DistributeSegment from "../components/DistributeSegment";
 import {useAuth} from "../../auth/AuthProvider";
 import EmptyTable from "../../EmptyTable";
@@ -38,7 +35,7 @@ export default function SegmentTable() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [visible, setVisible] = useState([])
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [selected, setSelected] = useState<Set<Id>>(createEmptyNumberSet());
     const [selectedAll, setSelectedAll] = useState(false)
     const [emptyRows, setEmptyRows] = useState(0)
@@ -282,7 +279,6 @@ export default function SegmentTable() {
 
 
         distribute(data).then((response)=>{
-            console.log(response)
             notifySuccess(response.data.value)
         }).catch((error)=>{
             console.log(error)
@@ -293,10 +289,7 @@ export default function SegmentTable() {
     }
 
     const handleSubmitPercentageSegments = (data) => {
-        console.log(data)
-
-        distributeRandom(data.percentage).then((response)=>{
-            console.log(response)
+        distributeRandom(data).then((response)=>{
             notifySuccess(response.data.value)
         }).catch((error)=>{
             console.log(error)
@@ -311,8 +304,6 @@ export default function SegmentTable() {
             setPageChanged(false)
             return
         }
-
-        setIsLoading(false)
 
         getSegmentsOnPageWithFilter(rowsPerPage, page, filterElements).then((returned) => {
             let values = returned.data.content;
@@ -410,7 +401,6 @@ export default function SegmentTable() {
                     />
                 </Paper>
             </Box>
-
         </>
 
     );

@@ -23,7 +23,7 @@ export default function UsersTable() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [visible, setVisible] = useState([])
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [emptyRows, setEmptyRows] = useState(0)
     const [segmentAddValue, setSegmentAddValue] = useState("");
     const [segmentDescription, setSegmentDescription] = useState("");
@@ -81,8 +81,6 @@ export default function UsersTable() {
             setPageChanged(false)
             return
         }
-
-        setIsLoading(false)
 
         if (userData != -1 && userInput) {
             getSegmentsOnUserPage(userData, rowsPerPage, page).then((returned) => {

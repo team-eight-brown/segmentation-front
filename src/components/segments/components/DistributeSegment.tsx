@@ -9,32 +9,42 @@ import {
     TextField,
     Typography
 } from "@mui/material";
+import {notifyError} from "../../../toast/Notifies";
 
 const DistributeSegment = ({handleSubmitRegexSegments, handleSubmitPercentageSegments}) => {
 
     const [isModalOpen, setModalOpen] = useState(false);
     const [percentage, setPercentage] = useState(1);
+    const [segmentName, setSegmentName] = useState("");
     const [segment, setSegment] = useState(0);
     const [regex, setRegex] = useState('');
     const [regexType, setRegexType] = useState("EmailRegexp")
 
     const handleSubmitRegex = (e) => {
         e.preventDefault();
-        console.log({ segment, regex, regexType });
         setModalOpen(false);
         handleSubmitRegexSegments({ segment, regex, regexType });
     };
 
     const handleSubmitPercentage = (e) => {
         e.preventDefault();
-        console.log({percentage});
+
+        if(segmentName == ""){
+            notifyError("Имя сегмента не может быть пустым")
+            return
+        }
+
         setModalOpen(false);
-        handleSubmitPercentageSegments({percentage})
+        handleSubmitPercentageSegments({percentage, segmentName})
     };
 
     const handleClose = () => {
         setModalOpen(false);
     };
+
+    const handleChangeSegmentName = (value) => {
+        setSegmentName(value)
+    }
 
     const handleChangePercentage = (value) => {
         if (value > 100){
@@ -92,6 +102,14 @@ const DistributeSegment = ({handleSubmitRegexSegments, handleSubmitPercentageSeg
                                 type="number"
                                 value={percentage}
                                 onChange={(e) => handleChangePercentage(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                            />
+                            <TextField
+                                label="Имя сегмента"
+                                type="text"
+                                value={segmentName}
+                                onChange={(e) => handleChangeSegmentName(e.target.value)}
                                 fullWidth
                                 margin="normal"
                             />

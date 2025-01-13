@@ -13,8 +13,13 @@ import UserPage from "./components/users/UserPage.tsx";
 import RegisterPage from "./components/register/RegisterPage.tsx";
 import theme from "./theme/Theme.tsx";
 import {ThemeProvider} from "@mui/material";
+import {useEffect} from "react";
 
 function App() {
+    useEffect(() => {
+        document.title = 'Segmentation';
+    }, []);
+
     return (
         <>
             <ThemeProvider theme={theme}>
