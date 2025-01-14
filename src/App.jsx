@@ -14,6 +14,7 @@ import RegisterPage from "./components/register/RegisterPage.tsx";
 import theme from "./theme/Theme.tsx";
 import {ThemeProvider} from "@mui/material";
 import {useEffect} from "react";
+import FullTablePage from "./components/fullusers/FullTablePage.tsx";
 
 function App() {
     useEffect(() => {
@@ -51,6 +52,14 @@ function App() {
                                 element={
                                     <ProtectedRoute>
                                         <DashboardPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/fulltable"
+                                element={
+                                    <ProtectedRoute>
+                                        <FullTablePage />
                                     </ProtectedRoute>
                                 }
                             />

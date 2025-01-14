@@ -16,7 +16,7 @@ const DistributeSegment = ({handleSubmitRegexSegments, handleSubmitPercentageSeg
     const [isModalOpen, setModalOpen] = useState(false);
     const [percentage, setPercentage] = useState(1);
     const [segmentName, setSegmentName] = useState("");
-    const [segment, setSegment] = useState(0);
+    const [segment, setSegment] = useState(1);
     const [regex, setRegex] = useState('');
     const [regexType, setRegexType] = useState("EmailRegexp")
 
@@ -58,8 +58,8 @@ const DistributeSegment = ({handleSubmitRegexSegments, handleSubmitPercentageSeg
     }
 
     const handleChangeSegment = (value) => {
-        if (value < 0){
-            setSegment(0)
+        if (value <= 1){
+            setSegment(1)
         } else {
             setSegment(value.replace(/^0+/, ''))
         }

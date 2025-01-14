@@ -1,17 +1,4 @@
-import axios from "axios";
-import {BASE_URL} from "./UserApi";
-
-export const instance = axios.create({
-    baseURL: BASE_URL
-});
-
-instance.interceptors.request.use(
-    (config) => {
-        config.headers.Authorization = `Bearer ${localStorage.getItem("user").replace("\"", "")}`
-        return config
-    }
-)
-
+import {instance} from "./UserApi";
 
 export interface Data {
     id: number;
@@ -32,7 +19,8 @@ export const START_LENGTH = 110
 
 export interface filters {
     nameFilter? : string,
-    idFilter? : string
+    idFilter? : string,
+    descriptionFilter? : string
 }
 
 let ROWS = generateRowsData(START_LENGTH)
@@ -49,7 +37,11 @@ export const addNewSegment = (text1: string, text2: string) => {
 }
 
 export const getSegmentsOnPageWithFilter = (rowsPerPage, page, filter : filters) => {
-    return instance.get("segments?sort=id&page=" + (page) + "&size=" + rowsPerPage);
+    let filterId = filter.idFilter? "&id=" + filter.idFilter : "";
+    let filterName = filter.nameFilter? "&name=" + filter.nameFilter : "";
+    let filterDesc = filter.descriptionFilter? "&description=" + filter.descriptionFilter : "";
+
+    return instance.get("segments?sort=id&page=" + (page) + "&size=" + rowsPerPage + filterId + filterName + filterDesc);
 }
 
 export const getSegmentsOnPage = (rowsPerPage, page) => {
@@ -65,7 +57,7 @@ export const updateSegmentData = (id, data) => {
     return instance.put("segments/" + id, data)
 }
 
-export const deleteSegments = (allSelected: boolean, id /*ids: Set<Id>*/) => {
+export const deleteSegments = (id /*ids: Set<Id>*/) => {
 
     return instance.delete("segments/" + id)
 }
@@ -79,10 +71,3 @@ export const distributeRandom = (data) => {
     return instance.post("segments/distribute-random", {percentage: data.percentage, segmentName: data.segmentName})
 }
 
-export const authUser = async (data: any) => {
-    return axios.post(BASE_URL + "auth/login", data)
-}
-
-export const registerUser = async (data: any) => {
-    return axios.post(BASE_URL + "auth/register", data)
-}

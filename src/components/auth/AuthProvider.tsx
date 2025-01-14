@@ -1,7 +1,7 @@
 import {createContext, useContext, useMemo, useState} from 'react';
 import {useLocalStorage} from "./useLocalStorage";
-import {authUser, registerUser} from "../../api/SegmentApi";
-import {notifyError, notifyInfo, notifySuccess} from "../../toast/Notifies";
+import {notifyError, notifySuccess} from "../../toast/Notifies";
+import {authUser, registerUser} from "../../api/AuthApi";
 
 const AuthContext = createContext({user: null, login: null, logout: null, register: null});
 

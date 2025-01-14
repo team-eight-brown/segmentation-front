@@ -5,11 +5,11 @@ import TableBody from "@mui/material/TableBody";
 import * as React from "react";
 import EditableElement from "../components/editable/EditableElement";
 
-const SegmentTableBody = ({visibleRows, selected, handleClick, emptyRows, handleChangeName, handleChangeDescription, allSelected}) => {
+const SegmentTableBody = ({visibleRows, selected, handleClick, emptyRows, handleChangeName, handleChangeDescription}) => {
     return (
         <TableBody>
             {visibleRows.map((row, index) => {
-                const isItemSelected = allSelected ? !selected.has(row.id) : selected.has(row.id)
+                const isItemSelected = selected.has(row.id)
                 const labelId = `segment-table-checkbox-${index}`;
 
                 return (

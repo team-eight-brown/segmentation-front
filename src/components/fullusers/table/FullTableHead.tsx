@@ -3,7 +3,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Checkbox from "@mui/material/Checkbox";
-import FilterByRow from "../components/FilterByRow";
+import FilterByRow from "../../segments/components/FilterByRow";
 
 type alignCell = 'inherit' | 'left' | 'center' | 'right' | 'justify';
 
@@ -22,40 +22,34 @@ const headCells: HeadCell[] = [
         label: 'ID',
     },
     {
-        id: 'name',
+        id: 'login',
         align: "left",
         disablePadding: false,
-        label: 'Имя',
+        label: 'Логин',
     },
     {
-        id: 'description',
+        id: 'email',
         align: "left",
         disablePadding: false,
-        label: 'Описание',
+        label: 'Почта',
+    },
+    {
+        id: 'ipAddress',
+        align: "left",
+        disablePadding: false,
+        label: 'IP адресс',
     },
 ];
 
-const SegmentTableHead = ({onSelectAllClick, numSelected, rowCount, handleFilter}) => {
+const FullTableHead = ({handleFilter}) => {
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="checkbox">
-                    <Checkbox
-                        color="primary"
-                        indeterminate={numSelected > 0 && numSelected < rowCount}
-                        checked={rowCount > 0 && numSelected === rowCount}
-                        onChange={onSelectAllClick}
-                        inputProps={{
-                            'aria-label': 'select all desserts',
-                        }}
-                        style={{width: '45px'}}
-                    />
-                </TableCell>
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
                         align={headCell.align}
-                        padding={headCell.disablePadding ? 'checkbox' : 'normal'}
+                        padding={'normal'}
                         style={{width: '400px'}}
 
                     >
@@ -63,12 +57,19 @@ const SegmentTableHead = ({onSelectAllClick, numSelected, rowCount, handleFilter
                             handleChangeFilter={handleFilter}
                             label={headCell.label}
                         />
-
                     </TableCell>
+
                 ))}
+                <TableCell
+                    padding={'normal'}
+                    style={{width: '50px'}}
+
+                >
+
+                </TableCell>
             </TableRow>
         </TableHead>
     );
 }
 
-export default SegmentTableHead
+export default FullTableHead

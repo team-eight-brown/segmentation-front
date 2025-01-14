@@ -13,6 +13,10 @@ const DashboardPage = () => {
         navigate("/users")
     }
 
+    const handleClickFullTable = () => {
+        navigate("/fulltable")
+    }
+
     return (
         <>
             <LogoutButton/>
@@ -35,6 +39,7 @@ const DashboardPage = () => {
                     <Stack spacing={2} direction="column" maxWidth={500}>
                         <Button variant="outlined" onClick={handleClickSegments}>На сегменты</Button>
                         <Button variant="outlined" onClick={handleClickUsers}>На пользователей</Button>
+                        <Button variant="outlined" onClick={handleClickFullTable}>На всех пользователей</Button>
                     </Stack>
                 </Box>
             </Container>

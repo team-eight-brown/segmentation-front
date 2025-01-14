@@ -16,17 +16,16 @@ const FilterByRow = ({label, handleChangeFilter}) => {
 
     const handleClose = () => {
         setAnchorEl(null);
-        setFilterValue(elem=> elem.trim());
+        setFilterValue(elem=> elem.trim())
         handleChangeFilter(filterValue, label)
     };
 
     const handleClear = () => {
-        setFilterValue('');
+        setFilterValue('')
     };
 
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
-
 
     return (
         <>
@@ -63,7 +62,7 @@ const FilterByRow = ({label, handleChangeFilter}) => {
                                 <IconButton
                                     size={"small"}
                                     color="secondary"
-                                    onClick={handleClear}
+                                    onClick={() => {handleClear()}}
                                 >
                                     <DeleteForeverRounded/>
                                 </IconButton>

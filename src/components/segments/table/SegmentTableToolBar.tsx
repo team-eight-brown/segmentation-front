@@ -8,7 +8,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import * as React from "react";
 
 const SegmentTableToolBar = ({handleDeleteSegments, numSelected}) => {
-    const ToolBarName = "Semgents"
+    const ToolBarName = "Segments"
 
     const handleFilter = () => {
         console.log("filter pressed");
