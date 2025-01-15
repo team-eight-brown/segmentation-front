@@ -7,37 +7,49 @@ import FilterByRow from "../../segments/components/FilterByRow";
 
 type alignCell = 'inherit' | 'left' | 'center' | 'right' | 'justify';
 
-interface HeadCell {
+export interface HeadCell {
     disablePadding: boolean;
     id: string | number;
     label: string;
     align: alignCell;
+    name: string
 }
 
-const headCells: HeadCell[] = [
+export const headCells: HeadCell[] = [
     {
         id: 'id',
         align: "left",
         disablePadding: true,
         label: 'ID',
+        name: 'id'
     },
     {
         id: 'login',
         align: "left",
         disablePadding: false,
         label: 'Логин',
+        name: 'логина'
     },
     {
         id: 'email',
         align: "left",
         disablePadding: false,
         label: 'Почта',
+        name: 'почты'
     },
     {
         id: 'ipAddress',
         align: "left",
         disablePadding: false,
         label: 'IP адресс',
+        name: 'IP адресса'
+    },
+    {
+        id: 'segmentName',
+        align: "left",
+        disablePadding: false,
+        label: '',
+        name: 'имени сегмента'
     },
 ];
 
@@ -45,28 +57,20 @@ const FullTableHead = ({handleFilter}) => {
     return (
         <TableHead>
             <TableRow>
-                {headCells.map((headCell) => (
+                {headCells.map((headCell, index) => (
                     <TableCell
                         key={headCell.id}
                         align={headCell.align}
                         padding={'normal'}
-                        style={{width: '400px'}}
-
+                        style={index == 4 ? {width: '100px'} : {width: '400px'}}
                     >
                         <FilterByRow
                             handleChangeFilter={handleFilter}
                             label={headCell.label}
+                            name={headCell.name}
                         />
                     </TableCell>
-
                 ))}
-                <TableCell
-                    padding={'normal'}
-                    style={{width: '50px'}}
-
-                >
-
-                </TableCell>
             </TableRow>
         </TableHead>
     );

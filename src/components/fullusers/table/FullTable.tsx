@@ -5,7 +5,7 @@ import Table from "@mui/material/Table";
 import TablePagination from "@mui/material/TablePagination";
 import * as React from "react";
 import {useEffect, useState} from "react";
-import FullTableHead from "./FullTableHead";
+import FullTableHead, {headCells} from "./FullTableHead";
 import LoadingProgressTable from "../../users/components/LoadingProgressTable";
 import EmptyTable from "../../EmptyTable";
 import FullTableBody from "./FullTableBody";
@@ -27,13 +27,15 @@ const FullTable = () => {
         idFilter: "",
         loginFilter: "",
         emailFilter: "",
-        ipFilter: ""
+        ipFilter: "",
+        segmentFilter: ""
     })
     const [prevFilterElements, setPrevFilterElements] = useState<filters>({
         idFilter: "",
         loginFilter: "",
         emailFilter: "",
-        ipFilter: ""
+        ipFilter: "",
+        segmentFilter: ""
     })
 
     const toggleRerender = () => {
@@ -103,7 +105,7 @@ const FullTable = () => {
     const handleFilter = (value: string, label: string) => {
         let trimValue = value.trim();
 
-        if (label == "ID") {
+        if (label == headCells[0].name) {
             if (prevFilterElements.idFilter != trimValue) {
 
                 setFilterElements(elem => {
@@ -124,7 +126,7 @@ const FullTable = () => {
                 return
             }
 
-        } else if (label == "Логин") {
+        } else if (label == headCells[1].name) {
             if (prevFilterElements.loginFilter != trimValue){
                 setPrevFilterElements(elem => {
                     return {
@@ -143,7 +145,7 @@ const FullTable = () => {
                 return;
             }
 
-        } else if (label == "Почта") {
+        } else if (label == headCells[2].name) {
             if (prevFilterElements.emailFilter != trimValue){
                 setPrevFilterElements(elem => {
                     return {
@@ -156,6 +158,42 @@ const FullTable = () => {
                     return {
                         ...elem,
                         emailFilter: trimValue
+                    }
+                })
+            } else {
+                return;
+            }
+        } else if (label == headCells[3].name) {
+            if (prevFilterElements.ipFilter != trimValue){
+                setPrevFilterElements(elem => {
+                    return {
+                        ...elem,
+                        ipFilter: trimValue
+                    }
+                })
+
+                setFilterElements(elem => {
+                    return {
+                        ...elem,
+                        ipFilter: trimValue
+                    }
+                })
+            } else {
+                return;
+            }
+        } else if (label == headCells[4].name) {
+            if (prevFilterElements.segmentFilter != trimValue){
+                setPrevFilterElements(elem => {
+                    return {
+                        ...elem,
+                        segmentFilter: trimValue
+                    }
+                })
+
+                setFilterElements(elem => {
+                    return {
+                        ...elem,
+                        segmentFilter: trimValue
                     }
                 })
             } else {

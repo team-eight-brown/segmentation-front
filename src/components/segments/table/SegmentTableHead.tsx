@@ -4,34 +4,31 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Checkbox from "@mui/material/Checkbox";
 import FilterByRow from "../components/FilterByRow";
+import {HeadCell} from "../../fullusers/table/FullTableHead";
 
 type alignCell = 'inherit' | 'left' | 'center' | 'right' | 'justify';
 
-interface HeadCell {
-    disablePadding: boolean;
-    id: string | number;
-    label: string;
-    align: alignCell;
-}
-
-const headCells: HeadCell[] = [
+export const headCells: HeadCell[] = [
     {
         id: 'id',
         align: "left",
         disablePadding: true,
         label: 'ID',
+        name: 'id'
     },
     {
         id: 'name',
         align: "left",
         disablePadding: false,
         label: 'Имя',
+        name: 'имени сегмента'
     },
     {
         id: 'description',
         align: "left",
         disablePadding: false,
         label: 'Описание',
+        name: 'описания сегмента'
     },
 ];
 
@@ -57,13 +54,12 @@ const SegmentTableHead = ({onSelectAllClick, numSelected, rowCount, handleFilter
                         align={headCell.align}
                         padding={headCell.disablePadding ? 'checkbox' : 'normal'}
                         style={{width: '400px'}}
-
                     >
                         <FilterByRow
                             handleChangeFilter={handleFilter}
                             label={headCell.label}
+                            name={headCell.name}
                         />
-
                     </TableCell>
                 ))}
             </TableRow>

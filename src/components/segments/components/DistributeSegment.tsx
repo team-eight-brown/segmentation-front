@@ -18,7 +18,7 @@ const DistributeSegment = ({handleSubmitRegexSegments, handleSubmitPercentageSeg
     const [segmentName, setSegmentName] = useState("");
     const [segment, setSegment] = useState(1);
     const [regex, setRegex] = useState('');
-    const [regexType, setRegexType] = useState("EmailRegexp")
+    const [regexType, setRegexType] = useState("LoginRegexp")
 
     const handleSubmitRegex = (e) => {
         e.preventDefault();
@@ -129,11 +129,10 @@ const DistributeSegment = ({handleSubmitRegexSegments, handleSubmitPercentageSeg
                                 value={regexType}
                                 variant="outlined"
                                 onChange={handleChange}
-
                             >
                                 <MenuItem value={"EmailRegexp"}>email</MenuItem>
                                 <MenuItem value={"IpRegexp"}>ip</MenuItem>
-                                <MenuItem value={"LoginRegexp "}>login</MenuItem>
+                                <MenuItem value={"LoginRegexp"}>login</MenuItem>
                             </Select>
                             <TextField
                                 label="ID Segm"

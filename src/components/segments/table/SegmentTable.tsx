@@ -7,7 +7,7 @@ import Paper from '@mui/material/Paper';
 
 import {useEffect, useState} from "react"
 import SegmentTableToolBar from "./SegmentTableToolBar";
-import SegmentTableHead from "./SegmentTableHead";
+import SegmentTableHead, {headCells} from "./SegmentTableHead";
 import SegmentTableBody from "./SegmentTableBody";
 import LoadingProgressTable from "../components/LoadingProgressTable";
 import {
@@ -84,7 +84,7 @@ export default function SegmentTable() {
         })
     }
 
-    const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => { //todo FIX
+    const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         const pageSelections = visible.map((n) => n.id);
 
         let isAllOnPageSelected = true;
@@ -97,11 +97,6 @@ export default function SegmentTable() {
             }
         })
 
-/*        if (isFilterSet){
-
-            addToSelected(toAdd);
-            return;
-        }*/
         if (isAllOnPageSelected){
             setSelected(createEmptyNumberSet())
         }
@@ -127,7 +122,7 @@ export default function SegmentTable() {
     const handleFilter = (value: string, label: string) => {
         let trimValue = value.trim();
 
-        if (label == "ID") {
+        if (label == headCells[0].name) {
             if (prevFilterElements.idFilter != trimValue) {
 
                 setFilterElements(elem => {
@@ -148,7 +143,7 @@ export default function SegmentTable() {
                 return
             }
 
-        } else if (label == "Имя") {
+        } else if (label == headCells[1].name) {
             if (prevFilterElements.nameFilter != trimValue){
                 setPrevFilterElements(elem => {
                     return {
@@ -167,7 +162,7 @@ export default function SegmentTable() {
                 return;
             }
 
-        } else if (label == "Описание") {
+        } else if (label == headCells[2].name) {
             if (prevFilterElements.descriptionFilter != trimValue){
                 setPrevFilterElements(elem => {
                     return {
@@ -268,7 +263,7 @@ export default function SegmentTable() {
 
     function handleSubmitRegexSegments(data){
         distribute(data).then((response)=>{
-            notifySuccess(response.data.value)
+            notifySuccess("Распределено успешно!")
         }).catch((error)=>{
             console.log(error)
             notifyError("Ошибка распределения")
