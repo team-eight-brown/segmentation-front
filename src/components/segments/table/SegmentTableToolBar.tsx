@@ -55,11 +55,6 @@ const SegmentTableToolBar = ({handleDeleteSegments, numSelected}) => {
                     >
                         {ToolBarName}
                     </Typography>
-                    <Tooltip title="Filter list">
-                        <IconButton onClick={handleFilter}>
-                            <FilterListIcon/>
-                        </IconButton>
-                    </Tooltip>
                 </>
 
             )}

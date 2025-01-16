@@ -24,3 +24,11 @@ export const getSegmentsOnUserPage = (userId, rowsPerPage, page) => {
 export const deleteSegment = (userId, segmentId) => {
     return instance.delete("segments/" + segmentId + "/users?userId=" + userId, {data: {userId}})
 }
+
+export const setAdmin = (id) => {
+    return instance.post("users/analyst/set-role", {roleId: "1", userId: id})
+}
+
+export const deleteAdmin = (id) => {
+    return instance.post("users/analyst/remove-role", {roleId: "1", userId: id})
+}

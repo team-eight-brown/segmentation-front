@@ -15,6 +15,7 @@ import theme from "./theme/Theme.tsx";
 import {ThemeProvider} from "@mui/material";
 import {useEffect} from "react";
 import FullTablePage from "./components/fullusers/FullTablePage.tsx";
+import UserRoles from "./components/userdata/roles/UserRoles.tsx";
 
 function App() {
     useEffect(() => {
@@ -60,6 +61,14 @@ function App() {
                                 element={
                                     <ProtectedRoute>
                                         <FullTablePage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/roles"
+                                element={
+                                    <ProtectedRoute>
+                                        <UserRoles />
                                     </ProtectedRoute>
                                 }
                             />

@@ -44,13 +44,18 @@ export default function SegmentTable() {
     const [isProcessAdd, setIsProcessAdd] = useState(false)
     const [rowsAmount, setRowsAmount] = useState(0)
     const [filterElements, setFilterElements] = useState<filters>({nameFilter: "", idFilter: "", descriptionFilter: ""})
-    const [prevFilterElements, setPrevFilterElements] = useState<filters>({nameFilter: "", idFilter: "", descriptionFilter: ""})
+    const [prevFilterElements, setPrevFilterElements] = useState<filters>({
+        nameFilter: "",
+        idFilter: "",
+        descriptionFilter: ""
+    })
     const [rerender, setRerender] = useState(false);
     const [isFilterSet, setIsFilterSet] = useState(false);
     const [pageChanged, setPageChanged] = useState(false);
     const {logout} = useAuth();
+    const {userRoles} = useAuth()
 
-    const checkFilterSet = () : boolean => {
+    const checkFilterSet = (): boolean => {
         return filterElements.idFilter != "" || filterElements.nameFilter != "" || filterElements.descriptionFilter != "";
     }
 
@@ -88,7 +93,7 @@ export default function SegmentTable() {
         const pageSelections = visible.map((n) => n.id);
 
         let isAllOnPageSelected = true;
-        let toAdd : Id[] = []
+        let toAdd: Id[] = []
 
         pageSelections.forEach(e => {
             if (!selected.has(e)) {
@@ -97,7 +102,7 @@ export default function SegmentTable() {
             }
         })
 
-        if (isAllOnPageSelected){
+        if (isAllOnPageSelected) {
             setSelected(createEmptyNumberSet())
         }
         addToSelected(toAdd);
@@ -144,7 +149,7 @@ export default function SegmentTable() {
             }
 
         } else if (label == headCells[1].name) {
-            if (prevFilterElements.nameFilter != trimValue){
+            if (prevFilterElements.nameFilter != trimValue) {
                 setPrevFilterElements(elem => {
                     return {
                         ...elem,
@@ -163,7 +168,7 @@ export default function SegmentTable() {
             }
 
         } else if (label == headCells[2].name) {
-            if (prevFilterElements.descriptionFilter != trimValue){
+            if (prevFilterElements.descriptionFilter != trimValue) {
                 setPrevFilterElements(elem => {
                     return {
                         ...elem,
@@ -198,7 +203,7 @@ export default function SegmentTable() {
         }).catch((error) => {
             updateError(tmpId, "Значение элемента не удалось обноввить");
 
-        }).finally(()=>{
+        }).finally(() => {
             toggleRerender()
         })
     }
@@ -216,7 +221,7 @@ export default function SegmentTable() {
         }).catch((error) => {
             updateError(tmpId, "Значение элемента не удалось обноввить");
 
-        }).finally(()=>{
+        }).finally(() => {
             toggleRerender()
         })
     }
@@ -249,7 +254,7 @@ export default function SegmentTable() {
 
         addNewSegment(segmentAddValue, segmentDescription).then((e) => {
             updateSuccess(id, "Элемент добавлен")
-        }).catch((error)=>{
+        }).catch((error) => {
             updateError(id, "Ошибка добавления элемента: \n" + error.response.data.error)
         }).finally(() => {
             toggleRerender()
@@ -261,10 +266,10 @@ export default function SegmentTable() {
         setIsFilterSet(checkFilterSet())
     }, [filterElements]);
 
-    function handleSubmitRegexSegments(data){
-        distribute(data).then((response)=>{
+    function handleSubmitRegexSegments(data) {
+        distribute(data).then((response) => {
             notifySuccess("Распределено успешно!")
-        }).catch((error)=>{
+        }).catch((error) => {
             console.log(error)
             notifyError("Ошибка распределения")
         }).finally(() => {
@@ -273,9 +278,9 @@ export default function SegmentTable() {
     }
 
     const handleSubmitPercentageSegments = (data) => {
-        distributeRandom(data).then((response)=>{
+        distributeRandom(data).then((response) => {
             notifySuccess(response.data.value)
-        }).catch((error)=>{
+        }).catch((error) => {
             console.log(error)
 
             notifyError("Ошибка распределения: \n" + error.response.data.value)
@@ -285,7 +290,7 @@ export default function SegmentTable() {
     }
 
     useEffect(() => {
-        if (pageChanged){
+        if (pageChanged) {
             setPageChanged(false)
             return
         }
@@ -324,14 +329,15 @@ export default function SegmentTable() {
 
     return (
         <>
-            <SegmentAdd
+            {userRoles.includes("Admin") && <SegmentAdd
                 handleSegmentAddValue={handleSegmentAddValue}
                 segmentAddValue={segmentAddValue}
                 handleAddSegment={handleAddSegment}
                 isProcessAdd={isProcessAdd}
                 handleSegmentDescription={handleSegmentDescription}
                 segmentDescription={segmentDescription}
-            />
+            />}
+
             <DistributeSegment
                 handleSubmitRegexSegments={handleSubmitRegexSegments}
                 handleSubmitPercentageSegments={handleSubmitPercentageSegments}
@@ -366,6 +372,7 @@ export default function SegmentTable() {
                                     emptyRows={emptyRows}
                                     handleChangeName={handleChangeName}
                                     handleChangeDescription={handleChangeDescription}
+                                    userRoles={userRoles}
                                 />
                             )}
 
@@ -385,6 +392,5 @@ export default function SegmentTable() {
                 </Paper>
             </Box>
         </>
-
     );
 }

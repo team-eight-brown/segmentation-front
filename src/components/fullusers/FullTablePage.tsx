@@ -2,6 +2,7 @@ import BackButton from "../dashboard/BackButton";
 import LogoutButton from "../auth/LogoutButton";
 import {Container} from "@mui/material";
 import FullTable from "./table/FullTable";
+import UserIcon from "../userdata/UserIcon";
 
 const FullTablePage = () => {
     return (
@@ -10,6 +11,7 @@ const FullTablePage = () => {
                 <BackButton/>
                 <FullTable/>
                 <LogoutButton/>
+                <UserIcon/>
             </Container>
         </>
     )

@@ -13,6 +13,7 @@ import EmptyTable from "../../EmptyTable";
 import {addNewSegmentToUser, deleteSegment, getSegmentsOnUserPage} from "../../../api/UserApi";
 import LoadingProgressTable from "../../users/components/LoadingProgressTable";
 import SegmentAdd from "./SegmentAdd";
+import {useAuth} from "../../auth/AuthProvider";
 
 export default function UsersTable({userId}) {
     const [page, setPage] = useState(0);
@@ -26,6 +27,8 @@ export default function UsersTable({userId}) {
     const [rowsAmount, setRowsAmount] = useState(0)
     const [rerender, setRerender] = useState(false);
     const [pageChanged, setPageChanged] = useState(false);
+
+    const {userRoles} = useAuth()
 
     const toggleRerender = () => {
         setRerender((prev) => !prev)
@@ -110,13 +113,13 @@ export default function UsersTable({userId}) {
 
     return (
         <>
-            <SegmentAdd
+            {userRoles.includes("Admin") && <SegmentAdd
                 handleSegmentAddValue={handleSegmentAddValue}
                 segmentAddValue={segmentAddValue}
                 handleAddSegment={handleAddSegment}
                 isProcessAdd={isProcessAdd}
                 userId={userId}
-            />
+            />}
             <Box sx={{width: '100%'}}>
                 <Paper sx={{width: '100%', mb: 2}}>
                     <TableContainer>
