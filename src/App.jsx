@@ -1,4 +1,4 @@
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import {BrowserRouter as Router, Navigate, Route, Routes} from 'react-router-dom';
 
 import './App.css'
 import LoginPage from "./components/login/LoginPage.tsx";
@@ -13,8 +13,15 @@ import UserPage from "./components/users/UserPage.tsx";
 import RegisterPage from "./components/register/RegisterPage.tsx";
 import theme from "./theme/Theme.tsx";
 import {ThemeProvider} from "@mui/material";
+import {useEffect} from "react";
+import FullTablePage from "./components/fullusers/FullTablePage.tsx";
+import UserRoles from "./components/userdata/roles/UserRoles.tsx";
 
 function App() {
+    useEffect(() => {
+        document.title = 'Segmentation';
+    }, []);
+
     return (
         <>
             <ThemeProvider theme={theme}>
@@ -22,7 +29,7 @@ function App() {
                 <AuthProvider>
                     <Router>
                         <Routes>
-                            <Route path="*" element={<HomePage />} />
+                            <Route path="/" element={<HomePage />} />
                             <Route path="/login" element={<LoginPage />} />
                             <Route path="/register" element={<RegisterPage />} />
                             <Route
@@ -49,6 +56,23 @@ function App() {
                                     </ProtectedRoute>
                                 }
                             />
+                            <Route
+                                path="/fulltable"
+                                element={
+                                    <ProtectedRoute>
+                                        <FullTablePage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/roles"
+                                element={
+                                    <ProtectedRoute>
+                                        <UserRoles />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route path="*" element={<Navigate to="/" />}/>
 
                         </Routes>
                     </Router>

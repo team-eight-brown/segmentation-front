@@ -1,12 +1,12 @@
 import {Popover, TextField} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import {DeleteForeverRounded} from "@mui/icons-material";
+import {DeleteForeverRounded, FilterAlt, FilterAltOff} from "@mui/icons-material";
 import * as React from "react";
 import {useState} from "react";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import Tooltip from "@mui/material/Tooltip";
 
-const FilterByRow = ({label, handleChangeFilter}) => {
+const FilterByRow = ({label, handleChangeFilter, name}) => {
     const [filterValue, setFilterValue] = useState('');
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -16,24 +16,25 @@ const FilterByRow = ({label, handleChangeFilter}) => {
 
     const handleClose = () => {
         setAnchorEl(null);
-        setFilterValue(elem=> elem.trim());
-        handleChangeFilter(filterValue, label)
+        setFilterValue(elem=> elem.trim())
+        handleChangeFilter(filterValue, name)
     };
 
     const handleClear = () => {
-        setFilterValue('');
+        setFilterValue('')
+        setAnchorEl(null);
+        handleChangeFilter('', name)
     };
 
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
-
 
     return (
         <>
             {label}
             <Tooltip title="filter">
                 <IconButton onClick={handleFilterClick}>
-                    <FilterListIcon />
+                    {filterValue != "" ? <FilterAltOff /> : <FilterAlt />}
                 </IconButton>
             </Tooltip>
             <Popover
@@ -52,7 +53,7 @@ const FilterByRow = ({label, handleChangeFilter}) => {
             >
                 <div style={{ padding: '16px', width: '400px' }}>
                     <TextField
-                        label={"Фильтр для " + label}
+                        label={"Фильтр для " + name}
                         variant="outlined"
                         fullWidth
                         autoFocus={true}
@@ -63,7 +64,7 @@ const FilterByRow = ({label, handleChangeFilter}) => {
                                 <IconButton
                                     size={"small"}
                                     color="secondary"
-                                    onClick={handleClear}
+                                    onClick={() => {handleClear()}}
                                 >
                                     <DeleteForeverRounded/>
                                 </IconButton>
@@ -73,7 +74,6 @@ const FilterByRow = ({label, handleChangeFilter}) => {
                 </div>
             </Popover>
         </>
-
 
     )
 }

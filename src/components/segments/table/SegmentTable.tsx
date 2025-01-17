@@ -7,7 +7,7 @@ import Paper from '@mui/material/Paper';
 
 import {useEffect, useState} from "react"
 import SegmentTableToolBar from "./SegmentTableToolBar";
-import SegmentTableHead from "./SegmentTableHead";
+import SegmentTableHead, {headCells} from "./SegmentTableHead";
 import SegmentTableBody from "./SegmentTableBody";
 import LoadingProgressTable from "../components/LoadingProgressTable";
 import {
@@ -19,9 +19,6 @@ import {
 import {notifyError, notifyLoading, notifySuccess, updateError, updateSuccess} from "../../../toast/Notifies";
 import {Id} from "react-toastify/dist/types";
 import SegmentAdd from "../components/SegmentAdd";
-import TableBody from "@mui/material/TableBody";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
 import DistributeSegment from "../components/DistributeSegment";
 import {useAuth} from "../../auth/AuthProvider";
 import EmptyTable from "../../EmptyTable";
@@ -38,26 +35,29 @@ export default function SegmentTable() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [visible, setVisible] = useState([])
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [selected, setSelected] = useState<Set<Id>>(createEmptyNumberSet());
-    const [selectedAll, setSelectedAll] = useState(false)
     const [emptyRows, setEmptyRows] = useState(0)
     const [segmentAddValue, setSegmentAddValue] = useState("");
     const [segmentDescription, setSegmentDescription] = useState("");
 
     const [isProcessAdd, setIsProcessAdd] = useState(false)
     const [rowsAmount, setRowsAmount] = useState(0)
-    const [filterElements, setFilterElements] = useState<filters>({nameFilter: "", idFilter: ""})
-    const [prevFilterElements, setPrevFilterElements] = useState<filters>({nameFilter: "", idFilter: ""})
+    const [filterElements, setFilterElements] = useState<filters>({nameFilter: "", idFilter: "", descriptionFilter: ""})
+    const [prevFilterElements, setPrevFilterElements] = useState<filters>({
+        nameFilter: "",
+        idFilter: "",
+        descriptionFilter: ""
+    })
     const [rerender, setRerender] = useState(false);
     const [isFilterSet, setIsFilterSet] = useState(false);
     const [pageChanged, setPageChanged] = useState(false);
     const {logout} = useAuth();
+    const {userRoles} = useAuth()
 
-    const checkFilterSet = () : boolean => {
-        return filterElements.idFilter != "" || filterElements.nameFilter != "";
+    const checkFilterSet = (): boolean => {
+        return filterElements.idFilter != "" || filterElements.nameFilter != "" || filterElements.descriptionFilter != "";
     }
-
 
     const toggleRerender = () => {
         setRerender((prev) => !prev)
@@ -80,11 +80,6 @@ export default function SegmentTable() {
         setPage(0);
     };
 
-    const setSelAll = () => {
-        setSelectedAll(true)
-        setSelected(createEmptyNumberSet())
-    }
-
     const addToSelected = (toAdd) => {
         setSelected(prev => {
             toAdd.forEach(e => {
@@ -94,11 +89,11 @@ export default function SegmentTable() {
         })
     }
 
-    const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => { //todo FIX
+    const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         const pageSelections = visible.map((n) => n.id);
 
         let isAllOnPageSelected = true;
-        let toAdd : Id[] = []
+        let toAdd: Id[] = []
 
         pageSelections.forEach(e => {
             if (!selected.has(e)) {
@@ -107,32 +102,15 @@ export default function SegmentTable() {
             }
         })
 
-/*        if (isFilterSet){
-
-            addToSelected(toAdd);
-            return;
-        }*/
-
-        if (selectedAll || rowsAmount == selected.size){
-            if (selected.size == 0){
-                setSelectedAll(false)
-            }
+        if (isAllOnPageSelected) {
             setSelected(createEmptyNumberSet())
-        } else {
-            if (isAllOnPageSelected) {
-                setSelAll()
-                return
-            }
-
-            addToSelected(toAdd);
-
         }
-
+        addToSelected(toAdd);
     };
 
     //todo add filters!
 
-    const handleSelect = (event: React.MouseEvent<unknown>, id: number) => { //todo fix bug when selected <= rowsAmount and page == 1 + check selectedAll
+    const handleSelect = (event: React.MouseEvent<unknown>, id: number) => {
         if (selected.has(id)) {
             setSelected(prev => {
                 prev.delete(id);
@@ -146,10 +124,10 @@ export default function SegmentTable() {
         }
     };
 
-    const handleFilter = (value: string, label: string) => { //todo fix with filters pagination! + fix chekced all
+    const handleFilter = (value: string, label: string) => {
         let trimValue = value.trim();
 
-        if (label == "ID") {
+        if (label == headCells[0].name) {
             if (prevFilterElements.idFilter != trimValue) {
 
                 setFilterElements(elem => {
@@ -170,8 +148,8 @@ export default function SegmentTable() {
                 return
             }
 
-        } else if (label == "NAME") {
-            if (prevFilterElements.nameFilter != trimValue){
+        } else if (label == headCells[1].name) {
+            if (prevFilterElements.nameFilter != trimValue) {
                 setPrevFilterElements(elem => {
                     return {
                         ...elem,
@@ -183,6 +161,25 @@ export default function SegmentTable() {
                     return {
                         ...elem,
                         nameFilter: trimValue
+                    }
+                })
+            } else {
+                return;
+            }
+
+        } else if (label == headCells[2].name) {
+            if (prevFilterElements.descriptionFilter != trimValue) {
+                setPrevFilterElements(elem => {
+                    return {
+                        ...elem,
+                        descriptionFilter: trimValue
+                    }
+                })
+
+                setFilterElements(elem => {
+                    return {
+                        ...elem,
+                        descriptionFilter: trimValue
                     }
                 })
             } else {
@@ -206,7 +203,7 @@ export default function SegmentTable() {
         }).catch((error) => {
             updateError(tmpId, "Значение элемента не удалось обноввить");
 
-        }).finally(()=>{
+        }).finally(() => {
             toggleRerender()
         })
     }
@@ -224,7 +221,7 @@ export default function SegmentTable() {
         }).catch((error) => {
             updateError(tmpId, "Значение элемента не удалось обноввить");
 
-        }).finally(()=>{
+        }).finally(() => {
             toggleRerender()
         })
     }
@@ -234,12 +231,10 @@ export default function SegmentTable() {
             setIsLoading(true)
             let tmpId = notifyLoading("Элементы удаляются")
 
-            deleteSegments(selectedAll, sel).then(() => {
+            deleteSegments(sel).then(() => {
                 updateSuccess(tmpId, "Выбранные элементы удалены")
 
                 setSelected(createEmptyNumberSet());
-                setSelectedAll(false);
-
                 toggleRerender();
             })
         })
@@ -259,13 +254,7 @@ export default function SegmentTable() {
 
         addNewSegment(segmentAddValue, segmentDescription).then((e) => {
             updateSuccess(id, "Элемент добавлен")
-            if (selectedAll){
-                setSelected(prev=>{
-                    prev.add(e.data.id)
-                    return prev;
-                })
-            }
-        }).catch((error)=>{
+        }).catch((error) => {
             updateError(id, "Ошибка добавления элемента: \n" + error.response.data.error)
         }).finally(() => {
             toggleRerender()
@@ -277,14 +266,10 @@ export default function SegmentTable() {
         setIsFilterSet(checkFilterSet())
     }, [filterElements]);
 
-    function handleSubmitRegexSegments(data){
-        console.log(data)
-
-
-        distribute(data).then((response)=>{
-            console.log(response)
-            notifySuccess(response.data.value)
-        }).catch((error)=>{
+    function handleSubmitRegexSegments(data) {
+        distribute(data).then((response) => {
+            notifySuccess("Распределено успешно!")
+        }).catch((error) => {
             console.log(error)
             notifyError("Ошибка распределения")
         }).finally(() => {
@@ -293,26 +278,22 @@ export default function SegmentTable() {
     }
 
     const handleSubmitPercentageSegments = (data) => {
-        console.log(data)
-
-        distributeRandom(data.percentage).then((response)=>{
-            console.log(response)
+        distributeRandom(data).then((response) => {
             notifySuccess(response.data.value)
-        }).catch((error)=>{
+        }).catch((error) => {
             console.log(error)
-            notifyError("Ошибка распределения")
+
+            notifyError("Ошибка распределения: \n" + error.response.data.value)
         }).finally(() => {
             toggleRerender()
         })
     }
 
     useEffect(() => {
-        if (pageChanged){
+        if (pageChanged) {
             setPageChanged(false)
             return
         }
-
-        setIsLoading(false)
 
         getSegmentsOnPageWithFilter(rowsPerPage, page, filterElements).then((returned) => {
             let values = returned.data.content;
@@ -348,14 +329,15 @@ export default function SegmentTable() {
 
     return (
         <>
-            <SegmentAdd
+            {userRoles.includes("Admin") && <SegmentAdd
                 handleSegmentAddValue={handleSegmentAddValue}
                 segmentAddValue={segmentAddValue}
                 handleAddSegment={handleAddSegment}
                 isProcessAdd={isProcessAdd}
                 handleSegmentDescription={handleSegmentDescription}
                 segmentDescription={segmentDescription}
-            />
+            />}
+
             <DistributeSegment
                 handleSubmitRegexSegments={handleSubmitRegexSegments}
                 handleSubmitPercentageSegments={handleSubmitPercentageSegments}
@@ -363,7 +345,7 @@ export default function SegmentTable() {
             <Box sx={{width: '100%'}}>
                 <Paper sx={{width: '100%', mb: 2}}>
                     <SegmentTableToolBar
-                        numSelected={selectedAll ? rowsAmount - selected.size : selected.size}
+                        numSelected={selected.size}
                         handleDeleteSegments={handleDeleteSegments}
                     />
                     <TableContainer>
@@ -373,11 +355,10 @@ export default function SegmentTable() {
                             size={'medium'}
                         >
                             <SegmentTableHead
-                                numSelected={selectedAll ? rowsAmount - selected.size : selected.size}
+                                numSelected={selected.size}
                                 onSelectAllClick={handleSelectAllClick}
                                 rowCount={rowsAmount}
                                 handleFilter={handleFilter}
-                                isAllSelected={selectedAll}
                             />
                             {isLoading ? (
                                 <LoadingProgressTable rowsPerPage={rowsPerPage}/>
@@ -385,13 +366,13 @@ export default function SegmentTable() {
                                 <EmptyTable/>
                             ) : (
                                 <SegmentTableBody
-                                    allSelected={selectedAll}
                                     visibleRows={visible}
                                     selected={selected}
                                     handleClick={handleSelect}
                                     emptyRows={emptyRows}
                                     handleChangeName={handleChangeName}
                                     handleChangeDescription={handleChangeDescription}
+                                    userRoles={userRoles}
                                 />
                             )}
 
@@ -410,8 +391,6 @@ export default function SegmentTable() {
                     />
                 </Paper>
             </Box>
-
         </>
-
     );
 }

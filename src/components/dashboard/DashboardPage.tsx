@@ -1,9 +1,12 @@
 import {useNavigate} from "react-router-dom";
 import {Box, Button, Container, Stack, Typography} from "@mui/material";
 import LogoutButton from "../auth/LogoutButton";
+import UserIcon from "../userdata/UserIcon";
+import {useAuth} from "../auth/AuthProvider";
 
 const DashboardPage = () => {
     const navigate = useNavigate();
+    const {userRoles} = useAuth()
 
     const handleClickSegments = () => {
         navigate("/segments")
@@ -11,6 +14,14 @@ const DashboardPage = () => {
 
     const handleClickUsers = () => {
         navigate("/users")
+    }
+
+    const handleClickFullTable = () => {
+        navigate("/fulltable")
+    }
+
+    const handleClickUserRoles = () => {
+        navigate("/roles")
     }
 
     return (
@@ -35,8 +46,11 @@ const DashboardPage = () => {
                     <Stack spacing={2} direction="column" maxWidth={500}>
                         <Button variant="outlined" onClick={handleClickSegments}>На сегменты</Button>
                         <Button variant="outlined" onClick={handleClickUsers}>На пользователей</Button>
+                        <Button variant="outlined" onClick={handleClickFullTable}>На всех пользователей</Button>
+                        {userRoles.includes("Admin") && <Button variant="outlined" onClick={handleClickUserRoles}>На редактирование прав</Button>}
                     </Stack>
                 </Box>
+                <UserIcon/>
             </Container>
         </>
     )

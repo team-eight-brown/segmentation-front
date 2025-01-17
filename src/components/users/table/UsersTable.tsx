@@ -23,7 +23,7 @@ export default function UsersTable() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [visible, setVisible] = useState([])
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [emptyRows, setEmptyRows] = useState(0)
     const [segmentAddValue, setSegmentAddValue] = useState("");
     const [segmentDescription, setSegmentDescription] = useState("");
@@ -33,7 +33,9 @@ export default function UsersTable() {
     const [filterElements, setFilterElements] = useState<filters>({nameFilter: "", idFilter: ""})
     const [rerender, setRerender] = useState(false);
     const [pageChanged, setPageChanged] = useState(false);
+
     const {logout} = useAuth();
+    const {userRoles} = useAuth()
 
     const [userInput, setUserInput] = useState(true);
     const [userData, setUserData] = useState(-1);
@@ -82,8 +84,6 @@ export default function UsersTable() {
             return
         }
 
-        setIsLoading(false)
-
         if (userData != -1 && userInput) {
             getSegmentsOnUserPage(userData, rowsPerPage, page).then((returned) => {
 
@@ -111,7 +111,7 @@ export default function UsersTable() {
 
             }).catch(e => {
                 console.log(e)
-                if (e.response.status === 404){
+                if (e.response.status === 404) {
                     handleUnchoose()
                     notifyError("Такой юзер не найден")
                 } else {
@@ -147,20 +147,20 @@ export default function UsersTable() {
 
     return (
         <>
-            {!userInput || userData == - 1 ? (
+            {!userInput || userData == -1 ? (
                 <UserInput
                     userSetter={userSetter}
                 />
             ) : (
                 <>
-                    <SegmentAdd
+                    {userRoles.includes("Admin") && <SegmentAdd
                         handleSegmentAddValue={handleSegmentAddValue}
                         segmentAddValue={segmentAddValue}
                         handleAddSegment={handleAddSegment}
                         isProcessAdd={isProcessAdd}
                         handleUnchoose={handleUnchoose}
                         userId={userData}
-                    />
+                    />}
                     <Box sx={{width: '100%'}}>
                         <Paper sx={{width: '100%', mb: 2}}>
                             <TableContainer>

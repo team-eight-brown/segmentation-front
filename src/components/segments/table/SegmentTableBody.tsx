@@ -5,11 +5,11 @@ import TableBody from "@mui/material/TableBody";
 import * as React from "react";
 import EditableElement from "../components/editable/EditableElement";
 
-const SegmentTableBody = ({visibleRows, selected, handleClick, emptyRows, handleChangeName, handleChangeDescription, allSelected}) => {
+const SegmentTableBody = ({visibleRows, selected, handleClick, emptyRows, handleChangeName, handleChangeDescription, userRoles}) => {
     return (
         <TableBody>
             {visibleRows.map((row, index) => {
-                const isItemSelected = allSelected ? !selected.has(row.id) : selected.has(row.id)
+                const isItemSelected = selected.has(row.id)
                 const labelId = `segment-table-checkbox-${index}`;
 
                 return (
@@ -47,13 +47,14 @@ const SegmentTableBody = ({visibleRows, selected, handleClick, emptyRows, handle
                         <TableCell
                             align="left"
                         >
-                            <EditableElement id={row.id} value={row.name} handleChangeById={handleChangeName}/>
+                            {userRoles.includes("Admin") ? <EditableElement id={row.id} value={row.name} handleChangeById={handleChangeName}/>: <div> {row.name} </div>}
                         </TableCell>
 
                         <TableCell
                             align="left"
                         >
-                            <EditableElement id={row.id} value={row.description} handleChangeById={handleChangeDescription}/>
+                            {userRoles.includes("Admin") ? <EditableElement id={row.id} value={row.description} handleChangeById={handleChangeDescription}/> : <div> {row.description} </div>}
+
                         </TableCell>
                     </TableRow>
                 );

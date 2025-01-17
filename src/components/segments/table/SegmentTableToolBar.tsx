@@ -6,9 +6,12 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import * as React from "react";
+import {useAuth} from "../../auth/AuthProvider";
+import {DeleteForeverRounded, DeleteRounded} from "@mui/icons-material";
 
 const SegmentTableToolBar = ({handleDeleteSegments, numSelected}) => {
-    const ToolBarName = "Semgents"
+    const ToolBarName = "Segments"
+    const {userRoles} = useAuth()
 
     const handleFilter = () => {
         console.log("filter pressed");
@@ -37,12 +40,12 @@ const SegmentTableToolBar = ({handleDeleteSegments, numSelected}) => {
                     >
                         {numSelected} selected
                     </Typography>
-                    <Tooltip title="Delete">
-                        <IconButton
+                    <Tooltip title={userRoles.includes("Admin") ? "Delete" : "Delete not working"}>
+                        {userRoles.includes("Admin") ? <IconButton
                             onClick={handleDeleteSegments}
                         >
                             <DeleteIcon/>
-                        </IconButton>
+                        </IconButton> : <DeleteForeverRounded/>}
                     </Tooltip>
                 </>
             ) : (
@@ -55,11 +58,6 @@ const SegmentTableToolBar = ({handleDeleteSegments, numSelected}) => {
                     >
                         {ToolBarName}
                     </Typography>
-                    <Tooltip title="Filter list">
-                        <IconButton onClick={handleFilter}>
-                            <FilterListIcon/>
-                        </IconButton>
-                    </Tooltip>
                 </>
 
             )}

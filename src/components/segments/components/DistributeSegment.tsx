@@ -9,32 +9,42 @@ import {
     TextField,
     Typography
 } from "@mui/material";
+import {notifyError} from "../../../toast/Notifies";
 
 const DistributeSegment = ({handleSubmitRegexSegments, handleSubmitPercentageSegments}) => {
 
     const [isModalOpen, setModalOpen] = useState(false);
     const [percentage, setPercentage] = useState(1);
-    const [segment, setSegment] = useState(0);
+    const [segmentName, setSegmentName] = useState("");
+    const [segment, setSegment] = useState(1);
     const [regex, setRegex] = useState('');
-    const [regexType, setRegexType] = useState("EmailRegexp")
+    const [regexType, setRegexType] = useState("LoginRegexp")
 
     const handleSubmitRegex = (e) => {
         e.preventDefault();
-        console.log({ segment, regex, regexType });
         setModalOpen(false);
         handleSubmitRegexSegments({ segment, regex, regexType });
     };
 
     const handleSubmitPercentage = (e) => {
         e.preventDefault();
-        console.log({percentage});
+
+        if(segmentName == ""){
+            notifyError("Имя сегмента не может быть пустым")
+            return
+        }
+
         setModalOpen(false);
-        handleSubmitPercentageSegments({percentage})
+        handleSubmitPercentageSegments({percentage, segmentName})
     };
 
     const handleClose = () => {
         setModalOpen(false);
     };
+
+    const handleChangeSegmentName = (value) => {
+        setSegmentName(value)
+    }
 
     const handleChangePercentage = (value) => {
         if (value > 100){
@@ -48,8 +58,8 @@ const DistributeSegment = ({handleSubmitRegexSegments, handleSubmitPercentageSeg
     }
 
     const handleChangeSegment = (value) => {
-        if (value < 0){
-            setSegment(0)
+        if (value <= 1){
+            setSegment(1)
         } else {
             setSegment(value.replace(/^0+/, ''))
         }
@@ -95,6 +105,14 @@ const DistributeSegment = ({handleSubmitRegexSegments, handleSubmitPercentageSeg
                                 fullWidth
                                 margin="normal"
                             />
+                            <TextField
+                                label="Имя сегмента"
+                                type="text"
+                                value={segmentName}
+                                onChange={(e) => handleChangeSegmentName(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                            />
                             <form onSubmit={handleSubmitPercentage}>
                                 <Button type="submit" variant="contained" color="primary" sx={{mt: 2}}>
                                     Отправить
@@ -111,11 +129,10 @@ const DistributeSegment = ({handleSubmitRegexSegments, handleSubmitPercentageSeg
                                 value={regexType}
                                 variant="outlined"
                                 onChange={handleChange}
-
                             >
                                 <MenuItem value={"EmailRegexp"}>email</MenuItem>
                                 <MenuItem value={"IpRegexp"}>ip</MenuItem>
-                                <MenuItem value={"LoginRegexp "}>login</MenuItem>
+                                <MenuItem value={"LoginRegexp"}>login</MenuItem>
                             </Select>
                             <TextField
                                 label="ID Segm"
