@@ -68,7 +68,7 @@ export default function SegmentTable() {
     }
 
     const handleSegmentDescription = (e) => {
-        setSegmentDescription(e.target.value.trim())
+        setSegmentDescription(e.target.value)
     }
 
     const handleChangePage = (event: unknown, newPage: number) => {
