@@ -23,11 +23,11 @@ export const AuthProvider = ({ children }) => {
     const login = async (data, navigate, addr) => {
         authUser(data).then((e)=>{
             setUser(e.data.token)
-            navigate(addr)
-            notifySuccess("Вы успешно вошли")
             rolesUser().then((data) => {
                 setUserData(data.data)
                 setUserRoles(data.data.roles)
+                navigate(addr)
+                notifySuccess("Вы успешно вошли")
             })
         }).catch(_ => {
             notifyError("Данные пользователя не найдены");
