@@ -68,7 +68,7 @@ export default function SegmentTable() {
     }
 
     const handleSegmentDescription = (e) => {
-        setSegmentDescription(e.target.value.trim())
+        setSegmentDescription(e.target.value)
     }
 
     const handleChangePage = (event: unknown, newPage: number) => {
@@ -268,7 +268,7 @@ export default function SegmentTable() {
 
     function handleSubmitRegexSegments(data) {
         distribute(data).then((response) => {
-            notifySuccess("Распределено успешно!")
+            notifySuccess(response.data.value)
         }).catch((error) => {
             console.log(error)
             notifyError("Ошибка распределения")

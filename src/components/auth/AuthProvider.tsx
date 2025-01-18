@@ -13,8 +13,12 @@ export const AuthProvider = ({ children }) => {
     const register = async (data, navigate, addr) => {
         registerUser(data).then((e)=>{
             setUser(e.data.token)
-            navigate(addr)
-            notifySuccess("Вы успешно зарегистрировались")
+            rolesUser().then((data) => {
+                setUserData(data.data)
+                setUserRoles(data.data.roles)
+                navigate(addr)
+                notifySuccess("Вы успешно зарегистрировались")
+            })
         }).catch(_ => {
             notifyError("Не удалось зарегестрировать пользователя");
         })
@@ -23,11 +27,11 @@ export const AuthProvider = ({ children }) => {
     const login = async (data, navigate, addr) => {
         authUser(data).then((e)=>{
             setUser(e.data.token)
-            navigate(addr)
-            notifySuccess("Вы успешно вошли")
             rolesUser().then((data) => {
                 setUserData(data.data)
                 setUserRoles(data.data.roles)
+                navigate(addr)
+                notifySuccess("Вы успешно вошли")
             })
         }).catch(_ => {
             notifyError("Данные пользователя не найдены");

@@ -26,7 +26,7 @@ const LoginPage = () => {
             return false
         }
         if (password.trim().length <= 7 || password.trim().length >= 256) {
-            notifyInfo("Пароль должен быть не меньше 8 и не болл 255 символов")
+            notifyInfo("Пароль должен быть не меньше 8 и не более 255 символов")
             return false
         }
         return true
